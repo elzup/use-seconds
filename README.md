@@ -5,12 +5,17 @@
 > Seconds interval time for React
 
 this timer is Keep adjusting `setTimeout` timing and return **adjusted Time**.
-[DEMO use\-seconds\-example \- CodeSandbox](https://codesandbox.io/s/use-seconds-example-w875w)
 
+
+```
 10.995 s → return 11.000 s
 ↓ setTimeout 1005 (ms)
 12.003 s → return 12.000 s
 ↓ setTimeout 997 (ms)
+```
+
+[DEMO use\-seconds\-example \- CodeSandbox](https://codesandbox.io/s/use-seconds-example-w875w)
+
 
 ## Install
 
