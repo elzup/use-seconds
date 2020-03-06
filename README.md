@@ -13,18 +13,14 @@ npm install --save use-seconds
 ## Usage
 
 ```tsx
-import * as React from 'react'
+import * as React from "react";
 
-import { useMyHook } from 'use-seconds'
+import { useSeconds } from "use-seconds";
 
 const Example = () => {
-  const example = useMyHook()
-  return (
-    <div>
-      {example}
-    </div>
-  )
-}
+  const { time } = useSeconds();
+  return <td>{String(time.getSeconds())}</td>;
+};
 ```
 
 ## License

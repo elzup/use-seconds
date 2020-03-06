@@ -13,11 +13,11 @@ test("updates every second", () => {
   const { result } = renderHook(() => useSeconds());
 
   expect(result.current).toMatchInlineSnapshot(`
-    Object {
-      "eventTime": 2020-03-22T13:22:00.000Z,
-      "nextMs": 1000,
-      "time": 2020-03-22T13:22:00.000Z,
-    }
+    Array [
+      2020-03-22T13:22:00.000Z,
+      2020-03-22T13:22:00.000Z,
+      1000,
+    ]
   `);
 
   // Fast-forward 1 sec
@@ -26,11 +26,11 @@ test("updates every second", () => {
     jest.advanceTimersByTime(1000);
   });
   expect(result.current).toMatchInlineSnapshot(`
-    Object {
-      "eventTime": 2020-03-22T13:22:01.000Z,
-      "nextMs": 1000,
-      "time": 2020-03-22T13:22:01.000Z,
-    }
+    Array [
+      2020-03-22T13:22:01.000Z,
+      2020-03-22T13:22:01.000Z,
+      1000,
+    ]
   `);
 
   // Fast-forward 1 sec
@@ -39,11 +39,11 @@ test("updates every second", () => {
     jest.advanceTimersByTime(1000);
   });
   expect(result.current).toMatchInlineSnapshot(`
-    Object {
-      "eventTime": 2020-03-22T13:22:02.000Z,
-      "nextMs": 1000,
-      "time": 2020-03-22T13:22:02.000Z,
-    }
+    Array [
+      2020-03-22T13:22:02.000Z,
+      2020-03-22T13:22:02.000Z,
+      1000,
+    ]
   `);
 });
 
@@ -54,46 +54,46 @@ test("fixed time is valid", () => {
   const { result } = renderHook(() => useSeconds());
 
   expect(result.current).toMatchInlineSnapshot(`
-    Object {
-      "eventTime": 2020-03-22T13:22:00.800Z,
-      "nextMs": 1200,
-      "time": 2020-03-22T13:22:01.000Z,
-    }
+    Array [
+      2020-03-22T13:22:01.000Z,
+      2020-03-22T13:22:00.800Z,
+      1200,
+    ]
   `);
 
   act(() => {
     advanceTo(new Date(date).setSeconds(1, 995));
-    jest.advanceTimersByTime(result.current.nextMs);
+    jest.advanceTimersByTime(result.current[2]);
   });
   expect(result.current).toMatchInlineSnapshot(`
-    Object {
-      "eventTime": 2020-03-22T13:22:01.995Z,
-      "nextMs": 1005,
-      "time": 2020-03-22T13:22:02.000Z,
-    }
+    Array [
+      2020-03-22T13:22:02.000Z,
+      2020-03-22T13:22:01.995Z,
+      1005,
+    ]
   `);
 
   act(() => {
     advanceTo(new Date(date).setSeconds(2, 997));
-    jest.advanceTimersByTime(result.current.nextMs);
+    jest.advanceTimersByTime(result.current[2]);
   });
   expect(result.current).toMatchInlineSnapshot(`
-    Object {
-      "eventTime": 2020-03-22T13:22:02.997Z,
-      "nextMs": 1003,
-      "time": 2020-03-22T13:22:03.000Z,
-    }
+    Array [
+      2020-03-22T13:22:03.000Z,
+      2020-03-22T13:22:02.997Z,
+      1003,
+    ]
   `);
 
   act(() => {
     advanceTo(new Date(date).setSeconds(4, 200));
-    jest.advanceTimersByTime(result.current.nextMs);
+    jest.advanceTimersByTime(result.current[2]);
   });
   expect(result.current).toMatchInlineSnapshot(`
-    Object {
-      "eventTime": 2020-03-22T13:22:04.200Z,
-      "nextMs": 800,
-      "time": 2020-03-22T13:22:04.000Z,
-    }
+    Array [
+      2020-03-22T13:22:04.000Z,
+      2020-03-22T13:22:04.200Z,
+      800,
+    ]
   `);
 });
