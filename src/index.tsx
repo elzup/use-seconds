@@ -11,9 +11,11 @@ const roundSeconds = (t: Date): [Date, number] => {
 };
 
 export const useSeconds = () => {
-  const [time, setTime] = useState<Date>(new Date());
-  const [eventTime, setEventTime] = useState<Date>(new Date());
-  const [nextMs, setNextMs] = useState<number>(1000);
+  const [time, setTime] = useState<{
+    time: Date;
+    eventTime: Date;
+    nextMs: number;
+  }>({ time: new Date(), eventTime: new Date(), nextMs: 1000 });
 
   useEffect(() => {
     let handle: NodeJS.Timeout | null = null;
@@ -24,9 +26,11 @@ export const useSeconds = () => {
 
       handle = setTimeout(secondsCycle, Math.max(nextMs, 1));
 
-      setNextMs(nextMs);
-      setEventTime(eventTime);
-      setTime(fixedTime);
+      setTime({
+        time: fixedTime,
+        eventTime,
+        nextMs
+      });
     };
 
     secondsCycle();
@@ -37,5 +41,5 @@ export const useSeconds = () => {
     };
   }, []);
 
-  return [time, eventTime, nextMs];
+  return time;
 };
