@@ -97,3 +97,54 @@ test("fixed time is valid", () => {
     ]
   `);
 });
+
+test("delay arg", () => {
+  act(() => {
+    advanceTo(new Date(date).setSeconds(0, 800));
+  });
+  const { result } = renderHook(() => useSeconds(123));
+
+  expect(result.current).toMatchInlineSnapshot(`
+    Array [
+      2020-03-22T13:22:01.123Z,
+      2020-03-22T13:22:00.800Z,
+      1323,
+    ]
+  `);
+
+  act(() => {
+    advanceTo(new Date(date).setSeconds(2, 118));
+    jest.advanceTimersByTime(result.current[2]);
+  });
+  expect(result.current).toMatchInlineSnapshot(`
+    Array [
+      2020-03-22T13:22:02.123Z,
+      2020-03-22T13:22:02.118Z,
+      1005,
+    ]
+  `);
+
+  act(() => {
+    advanceTo(new Date(date).setSeconds(3, 120));
+    jest.advanceTimersByTime(result.current[2]);
+  });
+  expect(result.current).toMatchInlineSnapshot(`
+    Array [
+      2020-03-22T13:22:03.123Z,
+      2020-03-22T13:22:03.120Z,
+      1003,
+    ]
+  `);
+
+  act(() => {
+    advanceTo(new Date(date).setSeconds(4, 323));
+    jest.advanceTimersByTime(result.current[2]);
+  });
+  expect(result.current).toMatchInlineSnapshot(`
+    Array [
+      2020-03-22T13:22:04.123Z,
+      2020-03-22T13:22:04.323Z,
+      800,
+    ]
+  `);
+});
