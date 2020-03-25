@@ -163,3 +163,42 @@ test("start with back time", () => {
     ]
   `)
 })
+
+test("every minutes", () => {
+  act(() => {
+    advanceTo(new Date(date).setMinutes(0, 45, 0))
+  })
+  const { result } = renderHook(() => useSeconds(10000, 60 * 1000))
+
+  expect(result.current).toMatchInlineSnapshot(`
+    Array [
+      2020-03-22T13:00:10.000Z,
+      2020-03-22T13:00:45.000Z,
+      25000,
+    ]
+  `)
+
+  act(() => {
+    advanceTo(new Date(date).setMinutes(0, 59, 999))
+    jest.advanceTimersByTime(result.current[2])
+  })
+  expect(result.current).toMatchInlineSnapshot(`
+    Array [
+      2020-03-22T13:01:10.000Z,
+      2020-03-22T13:00:59.999Z,
+      70001,
+    ]
+  `)
+
+  act(() => {
+    advanceTo(new Date(date).setMinutes(2, 20, 0))
+    jest.advanceTimersByTime(result.current[2])
+  })
+  expect(result.current).toMatchInlineSnapshot(`
+    Array [
+      2020-03-22T13:02:10.000Z,
+      2020-03-22T13:02:20.000Z,
+      50000,
+    ]
+  `)
+})
