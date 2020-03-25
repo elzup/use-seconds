@@ -1,10 +1,10 @@
-import React from "react";
+import React from "react"
 
-import { useSeconds } from "use-seconds";
+import { useSeconds } from "use-seconds"
 
 const App = () => {
-  const [time, eventTime, nextMs] = useSeconds();
-  const renderTime = new Date();
+  const [time, eventTime, nextMs] = useSeconds()
+  const renderTime = new Date()
 
   return (
     <div>
@@ -32,6 +32,6 @@ const App = () => {
         </tbody>
       </table>
     </div>
-  );
-};
-export default App;
+  )
+}
+export default App
