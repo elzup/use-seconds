@@ -3,26 +3,29 @@ import { useState, useEffect } from "react"
 const roundSeconds = (
   t: Date,
   delay: number,
-  forceFloor: boolean
+  forceFloor: boolean,
+  interval: number
 ): [Date, number] => {
   const tk = +t - delay
-  const d = (tk + 1000) % 1000
-  const nextMs = 1000 - d
+  const d = (tk + interval) % interval
+  const nextMs = interval - d
 
-  if (d < 500 || forceFloor) {
+  if (d < interval / 2 || forceFloor) {
     return [new Date(tk - d + delay), nextMs]
   }
-  return [new Date(tk + (1000 - d + delay)), nextMs + 1000]
+  return [new Date(tk + (interval - d + delay)), nextMs + interval]
 }
 
-export const useSeconds = (delay = 0): [Date, Date, number] => {
-  const [eventTime, setEventTime] = useState<Date>(new Date())
-  const [first, setFirst] = useState<boolean>(true)
-  const [time, nextMs] = roundSeconds(eventTime, delay, first)
+export const useSeconds = (
+  delay = 0,
+  interval = 1000
+): [Date, Date, number] => {
+  const [eventTimeTmp, setEventTime] = useState<Date | null>(null)
+  const eventTime = eventTimeTmp || new Date()
+  const [time, nextMs] = roundSeconds(eventTime, delay, !eventTimeTmp, interval)
 
   useEffect(() => {
     const handle = setTimeout(() => {
-      setFirst(false)
       setEventTime(new Date())
     }, Math.max(nextMs, 1))
 
