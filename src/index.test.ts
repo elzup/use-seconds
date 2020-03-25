@@ -55,9 +55,9 @@ test("fixed time is valid", () => {
 
   expect(result.current).toMatchInlineSnapshot(`
     Array [
-      2020-03-22T13:22:01.000Z,
+      2020-03-22T13:22:00.000Z,
       2020-03-22T13:22:00.800Z,
-      1200,
+      200,
     ]
   `);
 
@@ -106,9 +106,9 @@ test("delay arg", () => {
 
   expect(result.current).toMatchInlineSnapshot(`
     Array [
-      2020-03-22T13:22:01.123Z,
+      2020-03-22T13:22:00.123Z,
       2020-03-22T13:22:00.800Z,
-      1323,
+      323,
     ]
   `);
 
@@ -145,6 +145,21 @@ test("delay arg", () => {
       2020-03-22T13:22:04.123Z,
       2020-03-22T13:22:04.323Z,
       800,
+    ]
+  `);
+});
+
+test("start with back time", () => {
+  act(() => {
+    advanceTo(new Date(date).setSeconds(1, 800));
+  });
+  const { result } = renderHook(() => useSeconds());
+
+  expect(result.current).toMatchInlineSnapshot(`
+    Array [
+      2020-03-22T13:22:01.000Z,
+      2020-03-22T13:22:01.800Z,
+      200,
     ]
   `);
 });

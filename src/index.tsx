@@ -1,11 +1,15 @@
 import { useState, useEffect } from "react";
 
-const roundSeconds = (t: Date, delay: number): [Date, number] => {
+const roundSeconds = (
+  t: Date,
+  delay: number,
+  forceFloor: boolean
+): [Date, number] => {
   const tk = +t - delay;
   const d = (tk + 1000) % 1000;
   const nextMs = 1000 - d;
 
-  if (d < 500) {
+  if (d < 500 || forceFloor) {
     return [new Date(tk - d + delay), nextMs];
   }
   return [new Date(tk + (1000 - d + delay)), nextMs + 1000];
@@ -17,11 +21,11 @@ export const useSeconds = (delay = 0): [Date, Date, number] => {
   const [nextMs, setNextMs] = useState<number>(1000);
 
   useEffect(() => {
-    let handle: NodeJS.Timeout | null = null;
+    let handle: number | null = null;
 
-    const secondsCycle = () => {
+    const secondsCycle = (first = false) => {
       const eventTime = new Date();
-      const [fixedTime, nextMs] = roundSeconds(eventTime, delay);
+      const [fixedTime, nextMs] = roundSeconds(eventTime, delay, first);
 
       handle = setTimeout(secondsCycle, Math.max(nextMs, 1));
 
@@ -30,7 +34,7 @@ export const useSeconds = (delay = 0): [Date, Date, number] => {
       setNextMs(nextMs);
     };
 
-    secondsCycle();
+    secondsCycle(true);
     return () => {
       if (handle) {
         clearTimeout(handle);
