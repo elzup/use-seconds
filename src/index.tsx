@@ -16,31 +16,18 @@ const roundSeconds = (
 }
 
 export const useSeconds = (delay = 0): [Date, Date, number] => {
-  const [time, setTime] = useState<Date>(new Date())
   const [eventTime, setEventTime] = useState<Date>(new Date())
-  const [nextMs, setNextMs] = useState<number>(1000)
+  const [first, setFirst] = useState<boolean>(true)
+  const [time, nextMs] = roundSeconds(eventTime, delay, first)
 
   useEffect(() => {
-    let handle: number | null = null
+    const handle = setTimeout(() => {
+      setFirst(false)
+      setEventTime(new Date())
+    }, Math.max(nextMs, 1))
 
-    const secondsCycle = (first = false) => {
-      const eventTime = new Date()
-      const [fixedTime, nextMs] = roundSeconds(eventTime, delay, first)
-
-      handle = setTimeout(secondsCycle, Math.max(nextMs, 1))
-
-      setTime(fixedTime)
-      setEventTime(eventTime)
-      setNextMs(nextMs)
-    }
-
-    secondsCycle(true)
-    return () => {
-      if (handle) {
-        clearTimeout(handle)
-      }
-    }
-  }, [delay])
+    return () => clearTimeout(handle)
+  }, [eventTime])
 
   return [time, eventTime, nextMs]
 }
