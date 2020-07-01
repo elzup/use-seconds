@@ -30,4 +30,4 @@ jobs:
           key: ${{ runner.os }}-projectname-${{ hashFiles(format('{0}{1}', github.workspace, '/yarn.lock')) }}
           restore-keys: ${{ runner.os }}-projectname-
       - run: yarn install
-      - run: TZ=Asia/Tokyo yarn test
+      - run: yarn test
