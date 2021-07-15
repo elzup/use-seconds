@@ -3,15 +3,10 @@ import { useSeconds } from "."
 
 const date = new Date(2020, 2, 22, 22, 22, 0)
 
-beforeAll(() => {
-  jest.useFakeTimers("modern")
-})
-afterEach(() => {
-  cleanup()
-})
-afterAll(() => {
-  jest.useRealTimers()
-})
+beforeAll(() => jest.useFakeTimers("modern"))
+afterAll(jest.useRealTimers)
+
+afterEach(cleanup)
 
 test("updates every second", async () => {
   act(() => {
