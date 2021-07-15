@@ -1,15 +1,23 @@
-import { useSeconds } from "./"
-import { renderHook, act } from "@testing-library/react-hooks"
-import { advanceTo } from "jest-date-mock"
-
-// mock timer using jest
-jest.useFakeTimers()
+import { act, renderHook, cleanup } from "@testing-library/react-hooks"
+import { useSeconds } from "."
 
 const date = new Date(2020, 2, 22, 22, 22, 0)
-test("updates every second", () => {
+
+beforeAll(() => {
+  jest.useFakeTimers("modern")
+})
+afterEach(() => {
+  cleanup()
+})
+afterAll(() => {
+  jest.useRealTimers()
+})
+
+test("updates every second", async () => {
   act(() => {
-    advanceTo(new Date(date).setSeconds(0, 0))
+    jest.setSystemTime(new Date(date).setSeconds(0, 0))
   })
+
   const { result } = renderHook(() => useSeconds())
 
   expect(result.current).toMatchInlineSnapshot(`
@@ -22,9 +30,9 @@ test("updates every second", () => {
 
   // Fast-forward 1 sec
   act(() => {
-    advanceTo(new Date(date).setSeconds(1, 0))
     jest.advanceTimersByTime(1000)
   })
+
   expect(result.current).toMatchInlineSnapshot(`
     Array [
       2020-03-22T13:22:01.000Z,
@@ -35,7 +43,6 @@ test("updates every second", () => {
 
   // Fast-forward 1 sec
   act(() => {
-    advanceTo(new Date(date).setSeconds(2, 0))
     jest.advanceTimersByTime(1000)
   })
   expect(result.current).toMatchInlineSnapshot(`
@@ -49,7 +56,7 @@ test("updates every second", () => {
 
 test("fixed time is valid", () => {
   act(() => {
-    advanceTo(new Date(date).setSeconds(0, 800))
+    jest.setSystemTime(new Date(date).setSeconds(0, 800))
   })
   const { result } = renderHook(() => useSeconds())
 
@@ -62,8 +69,8 @@ test("fixed time is valid", () => {
   `)
 
   act(() => {
-    advanceTo(new Date(date).setSeconds(1, 995))
-    jest.advanceTimersByTime(result.current[2])
+    jest.setSystemTime(new Date(date).setSeconds(1, 995 - 200))
+    jest.advanceTimersByTime(200)
   })
   expect(result.current).toMatchInlineSnapshot(`
     Array [
@@ -74,8 +81,8 @@ test("fixed time is valid", () => {
   `)
 
   act(() => {
-    advanceTo(new Date(date).setSeconds(2, 997))
-    jest.advanceTimersByTime(result.current[2])
+    jest.setSystemTime(new Date(date).setSeconds(2, 997 - 1005))
+    jest.advanceTimersByTime(1005)
   })
   expect(result.current).toMatchInlineSnapshot(`
     Array [
@@ -86,8 +93,8 @@ test("fixed time is valid", () => {
   `)
 
   act(() => {
-    advanceTo(new Date(date).setSeconds(4, 200))
-    jest.advanceTimersByTime(result.current[2])
+    jest.setSystemTime(new Date(date).setSeconds(4, 200 - 1003))
+    jest.advanceTimersByTime(1003)
   })
   expect(result.current).toMatchInlineSnapshot(`
     Array [
@@ -100,7 +107,7 @@ test("fixed time is valid", () => {
 
 test("delay arg", () => {
   act(() => {
-    advanceTo(new Date(date).setSeconds(0, 800))
+    jest.setSystemTime(new Date(date).setSeconds(0, 800))
   })
   const { result } = renderHook(() => useSeconds(123))
 
@@ -113,8 +120,8 @@ test("delay arg", () => {
   `)
 
   act(() => {
-    advanceTo(new Date(date).setSeconds(2, 118))
-    jest.advanceTimersByTime(result.current[2])
+    jest.setSystemTime(new Date(date).setSeconds(2, 118 - 323))
+    jest.advanceTimersByTime(323)
   })
   expect(result.current).toMatchInlineSnapshot(`
     Array [
@@ -125,8 +132,8 @@ test("delay arg", () => {
   `)
 
   act(() => {
-    advanceTo(new Date(date).setSeconds(3, 120))
-    jest.advanceTimersByTime(result.current[2])
+    jest.setSystemTime(new Date(date).setSeconds(3, 120 - 1005))
+    jest.advanceTimersByTime(1005)
   })
   expect(result.current).toMatchInlineSnapshot(`
     Array [
@@ -137,8 +144,8 @@ test("delay arg", () => {
   `)
 
   act(() => {
-    advanceTo(new Date(date).setSeconds(4, 323))
-    jest.advanceTimersByTime(result.current[2])
+    jest.setSystemTime(new Date(date).setSeconds(4, 323 - 1003))
+    jest.advanceTimersByTime(1003)
   })
   expect(result.current).toMatchInlineSnapshot(`
     Array [
@@ -151,7 +158,7 @@ test("delay arg", () => {
 
 test("start with back time", () => {
   act(() => {
-    advanceTo(new Date(date).setSeconds(1, 800))
+    jest.setSystemTime(new Date(date).setSeconds(1, 800))
   })
   const { result } = renderHook(() => useSeconds())
 
@@ -166,7 +173,7 @@ test("start with back time", () => {
 
 test("every minutes", () => {
   act(() => {
-    advanceTo(new Date(date).setMinutes(0, 45, 0))
+    jest.setSystemTime(new Date(date).setMinutes(0, 45, 0))
   })
   const { result } = renderHook(() => useSeconds(10000, 60 * 1000))
 
@@ -179,8 +186,8 @@ test("every minutes", () => {
   `)
 
   act(() => {
-    advanceTo(new Date(date).setMinutes(0, 59, 999))
-    jest.advanceTimersByTime(result.current[2])
+    jest.setSystemTime(new Date(date).setMinutes(0, 59, 999 - 25000))
+    jest.advanceTimersByTime(25000)
   })
   expect(result.current).toMatchInlineSnapshot(`
     Array [
@@ -191,8 +198,8 @@ test("every minutes", () => {
   `)
 
   act(() => {
-    advanceTo(new Date(date).setMinutes(2, 20, 0))
-    jest.advanceTimersByTime(result.current[2])
+    jest.setSystemTime(new Date(date).setMinutes(2, 20, 0 - 70001))
+    jest.advanceTimersByTime(70001)
   })
   expect(result.current).toMatchInlineSnapshot(`
     Array [
