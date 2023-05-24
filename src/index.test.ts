@@ -3,7 +3,7 @@ import { useSeconds } from "."
 
 const date = "2020-01-01T00:00:00.000Z"
 
-beforeAll(() => jest.useFakeTimers("modern"))
+beforeAll(() => jest.useFakeTimers())
 afterAll(jest.useRealTimers)
 
 afterEach(cleanup)
