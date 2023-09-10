@@ -25,9 +25,12 @@ export const useSeconds = (
   const [time, nextMs] = roundSeconds(eventTime, delay, !eventTimeTmp, interval)
 
   useEffect(() => {
-    const handle = setTimeout(() => {
-      setEventTime(new Date())
-    }, Math.max(nextMs, 1))
+    const handle = setTimeout(
+      () => {
+        setEventTime(new Date())
+      },
+      Math.max(nextMs, 1)
+    )
 
     return () => clearTimeout(handle)
   }, [eventTime])
