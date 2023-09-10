@@ -23,10 +23,7 @@
   "scripts": {
     "test": "TZ=Etc/GMT CI=1 jest --env=jsdom --color",
     "test:watch": "TZ=Etc/GMT jest --env=jsdom",
-    "build": "rollup -c --bundleConfigAsCjs",
-    "prepare": "yarn run build",
-    "predeploy": "cd example && yarn install && yarn run build",
-    "deploy": "gh-pages -d example/build"
+    "build": "rollup -c --bundleConfigAsCjs"
   },
   "dependencies": {},
   "peerDependencies": {
