@@ -30,8 +30,8 @@
     "react": "^16.9.0 || ^17.0.0 || ^18.0.0"
   },
   "devDependencies": {
-    "@babel/core": "7.22.17",
-    "@babel/runtime": "7.22.15",
+    "@babel/core": "7.23.2",
+    "@babel/runtime": "7.23.2",
     "@testing-library/react-hooks": "8.0.1",
     "@types/jest": "29.5.7",
     "@types/react": "18.2.33",
